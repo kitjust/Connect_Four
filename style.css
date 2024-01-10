@@ -1,0 +1,34 @@
+body {
+	/* text-align: center; */
+	background-color: Aliceblue;
+}
+
+td {
+	width: 100px;
+	height: 70px;
+}
+
+#theTableAbove {
+	border: 2px solid transparent;
+
+}
+#theTableAbove td {
+	border: 2px solid transparent;
+
+}
+#theTableAbove td:hover {
+	border-bottom: 2px solid black;
+
+}
+
+#theGameBoard {
+	border: 2px inset blue;
+
+}
+#theGameBoard td {
+	border: 2px inset blue;
+	color: black;
+	font-size: 22px;
+	text-align: center;
+
+}

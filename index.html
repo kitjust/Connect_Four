@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>15. Connect Four</title>
+<link href='style.css' rel='stylesheet' type='text/css' />
+</head>
+<body>
+<center>
+
+<table id="theTableAbove">
+	<tr>
+		<td onclick="Action(0)"></td>
+		<td onclick="Action(1)"></td>
+		<td onclick="Action(2)"></td>
+		<td onclick="Action(3)"></td>
+		<td onclick="Action(4)"></td>
+		<td onclick="Action(5)"></td>
+		<td onclick="Action(6)"></td>
+	</tr>
+</table>
+
+<table id="theGameBoard">
+	<tr>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr>
+</table>
+
+<h1 id="WHOSTURN_element"> red's turn </h1>
+
+</center>
+</body>
+<script>
+let WHOSTURN = 'red';
+let WHOSTURN_element = document.getElementById('WHOSTURN_element');
+let CELLS = [];
+
+function Reset() {
+	let rows = document.querySelectorAll("#theGameBoard tr");
+	for (let y = 0; y <= 5; y++) {
+		CELLS.push( rows[y].children );
+		for (let x = 0; x <= 6; x++) {
+			CELLS[y][x].style.backgroundColor = 'white';
+			//CELLS[y][x].innerHTML = 'row: '+ y +'<br>column: '+ x;
+		}
+	}
+	WHOSTURN = 'red';
+	WHOSTURN_element.style.backgroundColor = 'red';
+	WHOSTURN_element.innerHTML = "red's turn";
+}
+
+function Action(x) {
+	for (let y = 5; y >= 0; y--) {
+		if ('white' == CELLS[y][x].style.backgroundColor) {
+			PlaceThePiece(CELLS[y][x]);
+			return;
+		}
+	}
+	alert('this column is full');
+}
+
+function PlaceThePiece(element) {
+	element.style.backgroundColor = WHOSTURN;
+	if (!CheckForWinner()) {
+		ChangePlayer();
+		if (EverythingIsFull())
+			setTimeout(function(){
+				alert("no winner");
+				Reset();
+			}, 1);
+	}
+	else
+		setTimeout(function(){
+			alert(WHOSTURN + ' wins!')
+			Reset();
+		}, 1);
+}
+
+function ChangePlayer() {
+	if ('red' == WHOSTURN) {
+		WHOSTURN = 'blue';
+		WHOSTURN_element.style.color = 'white';
+	} else {
+		WHOSTURN = 'red';
+		WHOSTURN_element.style.color = 'black';
+	}
+	WHOSTURN_element.style.backgroundColor = WHOSTURN;
+	WHOSTURN_element.innerHTML = WHOSTURN + "'s turn";
+}
+
+function CheckForWinner() {
+	let pieces = '';
+	let column, row;
+
+	// Vertically
+	pieces += '[Vertically]';
+	for (column = 0; column <= 6; column++) {
+		pieces += '\n';
+		for (row = 5; row >= 0; row--)
+			pieces += CELLS[row][column].style.backgroundColor;
+	}
+	
+	// Horizontally
+	pieces += '\n[Horizontally]';
+	for (row = 5; row >= 0; row--) {
+		pieces += '\n';
+		for (column = 0; column <= 6; column++)
+			pieces += CELLS[row][column].style.backgroundColor;
+	}
+	
+	// Diagonal Up-Right
+	pieces += '\n[Diagonal Up-Right]';
+	for (let x = -2; x <= 3; x++) {
+		pieces += '\n';
+		column = x;
+		for (row = 5; row >= 0; row--, column++)
+			if (column >= 0 && column <= 6) // See if it's not out of bounds
+				pieces += CELLS[row][column].style.backgroundColor;
+	}
+	
+	// Diagonal Up-Left
+	pieces += '\n[Diagonal Up-Left]';
+	for (let x = 8; x >= 3; x--) {
+		pieces += '\n';
+		column = x;
+		for (row = 5; row >= 0; row--, column--)
+			if (column >= 0 && column <= 6) // See if it's not out of bounds
+				pieces += CELLS[row][column].style.backgroundColor;
+	}
+	
+	console.log(pieces);
+	return pieces.includes(WHOSTURN + WHOSTURN + WHOSTURN + WHOSTURN);
+}
+
+function EverythingIsFull() {
+	// Search horizontally for white squares
+	for (let x = 0; x <= 6; x++)
+		for (let y = 0; y <= 5; y++)
+			if ('white' == CELLS[y][x].style.backgroundColor)
+				return false;
+	return true;
+}
+
+Reset();
+</script>
+</html>
